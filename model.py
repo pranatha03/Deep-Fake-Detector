@@ -11,7 +11,7 @@ def extract_first_frame(video_path):
     if not ret:
         raise ValueError("Could not read frame from video")
 
-    # Convert BGR (OpenCV) to RGB (PIL)
+  
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     image = Image.fromarray(frame)
     return image
@@ -27,6 +27,6 @@ def predict(video_path):
     ])
     image_tensor = transform(image).unsqueeze(0)
 
-    # Step 3: Dummy prediction (replace with your model inference)
-    # result = model(image_tensor)
-    return {"prediction": "real"}  # placeholder result
+    # Step 3: Dummy prediction 
+  
+    return {"prediction": "real"} 
