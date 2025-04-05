@@ -1,0 +1,42 @@
+import os
+import torch
+import torchvision.transforms as transforms
+from PIL import Image
+
+
+input_folder = "normalized_frames" 
+output_folder = "augmented_frames"
+
+
+os.makedirs(output_folder, exist_ok=True)
+
+
+augmentations = transforms.Compose([
+    transforms.RandomRotation(degrees=20), 
+    transforms.RandomHorizontalFlip(p=0.5),  
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1), 
+])
+
+
+for img_name in os.listdir(input_folder):
+    img_path = os.path.join(input_folder, img_name)
+
+    try:
+      
+        img = Image.open(img_path).convert("RGB")
+
+    
+        img.save(os.path.join(output_folder, img_name))
+
+      
+        for i in range(3):
+            img_aug = augmentations(img)
+            save_path = os.path.join(output_folder, f"{img_name.split('.')[0]}_aug{i}.jpg")
+            img_aug.save(save_path)
+
+        print(f"✅ Augmented & saved: {img_name}")
+
+    except Exception as e:
+        print(f"❌ Error processing {img_name}: {e}")
+
+print(f"🎉 Augmentation complete! {len(os.listdir(output_folder))} images saved in '{output_folder}' folder.")
