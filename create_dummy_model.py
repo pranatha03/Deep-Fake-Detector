@@ -7,8 +7,7 @@ class DummyCNN(nn.Module):
         super(DummyCNN, self).__init__()
         self.conv1 = nn.Conv2d(3, 16, 3, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
-        # Assuming input images are resized to 128x128,
-        # after conv+pool the dimensions become 64x64 with 16 channels.
+     
         self.fc1 = nn.Linear(16 * 64 * 64, 2)  # 2 output classes: Real vs. Fake
 
     def forward(self, x):
