@@ -5,7 +5,7 @@ import os
 
 app = FastAPI()
 
-# Enable CORS so frontend (on a different port or domain) can access backend
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # You can restrict this to your frontend URL
