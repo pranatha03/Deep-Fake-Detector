@@ -31,3 +31,35 @@ This is a smart, AI-powered Deepfake Detector web application built as part of a
 
 ## 📁 File Structure (partial)
 
+Deep-Fake-Detector/ ├── backend/ │ ├── main.py # FastAPI app entry point │ ├── model.py # Deepfake detection logic using pretrained model │ ├── utils.py # Helper functions (e.g., preprocessing) │ └── requirements.txt # Python dependencies │ ├── frontend/ │ ├── index.html # Main web page │ ├── styles.css # Futuristic UI styling │ ├── script.js # Handles file uploads & prediction requests │ └── assets/ # Images, icons, or animations │ ├── model/ │ └── deepfake_model.pth # Pretrained PyTorch model (or .h5 for TensorFlow) │ ├── static/ # Static files served by FastAPI │ └── README.md # You're reading it!
+
+markdown
+Copy
+Edit
+
+---
+
+## 🚀 Deployment
+
+You can deploy this project using:
+
+- **Render** (Backend)
+- **Vercel / Netlify** (Frontend)
+- Or use **Docker** for a containerized solution.
+
+### Quick Deployment on Render (Backend)
+1. Push your code to GitHub.
+2. Create a new Web Service on [Render](https://render.com/).
+3. Choose your repo, select Python, and set the **Start Command** as:
+uvicorn backend.main:app --host 0.0.0.0 --port 8000
+
+yaml
+Copy
+Edit
+4. Add `requirements.txt` as your Python environment file.
+
+### Frontend Deployment on Vercel
+1. Push your `frontend` folder to a separate repo (or subfolder).
+2. Deploy it using [Vercel](https://vercel.com/) with HTML/CSS config.
+
+---
