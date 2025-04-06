@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to Deepfake Detector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      height: 100vh;
+      background: linear-gradient(-45deg, #000000, #010f1f, #001f3f, #000000);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #00fff7;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      text-shadow: 0 0 10px #00fff7, 0 0 20px #00b3ff;
+      margin-bottom: 40px;
+      animation: pulseGlow 2s infinite ease-in-out;
+      z-index: 2;
+    }
+
+    button {
+      padding: 15px 35px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background-color: #00fff7;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #00fff7;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 2;
+    }
+
+    button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 25px #00fff7;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        text-shadow: 0 0 10px #00fff7;
+      }
+      50% {
+        text-shadow: 0 0 25px #00fff7, 0 0 35px #00b3ff;
+      }
+      100% {
+        text-shadow: 0 0 10px #00fff7;
+      }
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translateY(-200px) scale(1.5);
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-400px) scale(1);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Deepfake Detector</h1>
+  <button onclick="window.location.href='index.html'">Click Here</button>
+
+  <script>
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      particle.style.width = `${Math.random() * 8 + 4}px`;
+      particle.style.height = particle.style.width;
+      particle.style.left = `${Math.random() * 100}vw`;
+      particle.style.top = `${Math.random() * 100 + 100}vh`;
+      particle.style.animationDuration = `${10 + Math.random() * 10}s`;
+      document.body.appendChild(particle);
+    }
+  </script>
+</body>
+</html>

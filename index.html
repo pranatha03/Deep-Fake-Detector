@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deepfake Detector</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Press Start 2P', cursive;
+      overflow: hidden;
+    }
+
+    .glitch {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: #0ff;
+      text-shadow: 0 0 4px #0ff, 0 0 8px #f0f;
+      animation: glitch 1.5s infinite alternate;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px 0px cyan, -2px -2px 0px magenta; }
+      100% { text-shadow: -2px -2px 0px cyan, 2px 2px 0px magenta; }
+    }
+
+    .glow-button {
+      background-color: #00e6e6;
+      box-shadow: 0 0 15px #00e6e6;
+      transition: all 0.3s ease-in-out;
+      font-size: 1.2rem;
+      padding: 12px;
+    }
+
+    .glow-button:hover {
+      box-shadow: 0 0 25px #00e6e6, 0 0 40px #f0f;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 0 15px rgba(0, 230, 230, 0.5);
+    }
+
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+
+    .real { color: #00ff99; }
+    .fake { color: #ff0055; }
+  </style>
+</head>
+
+<body class="flex flex-col items-center justify-center h-screen relative">
+  <div id="particles-js"></div>
+
+  <h1 class="glitch text-center">Deepfake Detector</h1>
+
+  <div class="glass mt-6 w-96 text-center">
+    <input type="file" id="file-upload" class="border border-gray-600 p-3 w-full bg-black text-white rounded cursor-pointer transition-transform transform hover:scale-105">
+    <button id="predict-btn" class="glow-button w-full p-3 mt-5 text-black font-bold rounded uppercase">Predict</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById("predict-btn").addEventListener("click", async () => {
+        const fileInput = document.getElementById("file-upload");
+        const resultBtn = document.getElementById("predict-btn");
+    
+        if (!fileInput.files.length) {
+            alert("Please select a file.");
+            return;
+        }
+    
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+    
+        resultBtn.textContent = "⏳ Predicting...";
+        console.log("🔁 Sending file to backend...");
+    
+        try {
+            const response = await fetch("http://127.0.0.1:8000/predict", {
+                method: "POST",
+                body: formData
+            });
+    
+            console.log("✅ Got response from backend");
+    
+            if (!response.ok) throw new Error("❌ Server error");
+    
+            const data = await response.json();
+            console.log("🎯 Prediction result:", data);
+    
+            resultBtn.textContent = data.result === "real" ? "✅ REAL" : "❗ FAKE";
+        } catch (error) {
+            console.error("🚨 Error in fetch:", error);
+            resultBtn.textContent = "❌ Error";
+        }
+        const result = await response.json();
+document.getElementById("result").innerText = 
+  `Prediction: ${result.result.toUpperCase()} (${result.confidence}% confidence)`;
+
+    });
+    </script>
+    
+    
+</body>
+</html>
