@@ -1,34 +1,56 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import shutil
+from model import predict_deepfake_image, predict_deepfake_video
 import os
 
 app = FastAPI()
 
-
+# Allow frontend to access this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can restrict this to your frontend URL
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+@app.get("/")
+def root():
+    return {"message": "Deepfake Detection API is running"}
+
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    print(f"📁 Received file: {file.filename}")
+    try:
+        file_bytes = await file.read()
+        ext = os.path.splitext(file.filename)[1].lower()
 
-    # Save the uploaded file temporarily (optional but good for real model use)
-    temp_dir = "temp_uploads"
-    os.makedirs(temp_dir, exist_ok=True)
-    file_path = os.path.join(temp_dir, file.filename)
+        if ext in [".jpg", ".jpeg", ".png"]:
+            label, confidence = predict_deepfake_image(file_bytes)
+        elif ext in [".mp4", ".avi", ".mov", ".webm"]:
+            label, confidence = predict_deepfake_video(file_bytes)
+        else:
+            raise HTTPException(status_code=400, detail="Unsupported file format")
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        return {
+            "label": label,
+            "confidence": round(confidence * 100, 2)
+        }
 
-    # TODO: Replace the below line with your actual deepfake detection model
-    result = "real"  # or "fake" depending on your model output
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+# main.py
+from fastapi import FastAPI, UploadFile, File
+from model import predict_deepfake_image
+import traceback
 
-    print(f"✅ Prediction result: {result}")
+app = FastAPI()
 
-    return {"result": result}
+@app.post("/predict")
+async def predict(file: UploadFile = File(...)):
+    try:
+        file_bytes = await file.read()
+        label, confidence = predict_deepfake_image(file_bytes, file.filename)
+        return {"label": label, "confidence": confidence}
+    except Exception as e:
+        traceback.print_exc()
+        return {"error": str(e)}
